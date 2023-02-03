@@ -533,6 +533,8 @@ def multiCmsRun(
     # filter out the jobs with an overlap lower than 90%
     values      = [ throughputs[i] for i in range(len(throughputs)) if overlaps[i] >= 0.90 ]
     n = len(values)
+    value = 0
+    error = 0
     if n > 1:
       value = np.average(values)
       error = np.std(values, ddof=1)
@@ -553,6 +555,8 @@ def multiCmsRun(
       print('%8.1f ev/s (based on a single measurement)' % (value, ))
     else:
       print('%8.1f ev/s (single measurement with the highest overlap)' % (value, ))
+
+    data.write('%d, %d, %d, %d, %d, %d, %f, %f\n' % (jobs, n, threads, streams, gpus_per_job, used_events, value, error))
 
   if not plumbing:
     print()
