@@ -556,7 +556,8 @@ def multiCmsRun(
     else:
       print('%8.1f ev/s (single measurement with the highest overlap)' % (value, ))
 
-    data.write('%d, %d, %d, %d, %d, %d, %f, %f\n' % (jobs, n, threads, streams, gpus_per_job, used_events, value, error))
+    if data:
+        data.write('%d, %d, %d, %d, %d, %d, %f, %f\n' % (jobs, n, threads, streams, gpus_per_job, used_events, value, error))
 
   if not plumbing:
     print()
