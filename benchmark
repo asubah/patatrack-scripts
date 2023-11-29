@@ -2,6 +2,7 @@
 """benchmark: run N jobs with T threads and S streams over N GPUs
 """
 import argparse
+import pathlib
 import sys
 import os
 import copy
@@ -181,7 +182,26 @@ if __name__ == "__main__":
                       default = None,
                       help = 'path to temporary directory used at runtime [default: None, to use a system-dependent default temporary directory]')
 
+  parser.add_argument('--benchmark-results',
+                      dest = 'data',
+                      action = 'store',
+                      default = None,
+                      type = argparse.FileType('w'),
+                      help = 'path to save the results of benchmarking [default: None, results will not be saved in a file]')
+
+  group = parser.add_mutually_exclusive_group()
+  group.add_argument('--io-benchmark',
+                     dest = 'io_benchmark',
+                     action = 'store_true',
+                     default = True,
+                     help = 'run IO benchmark [default: True]')
+  group.add_argument('--no-io-benchmark',
+                     dest = 'io_benchmark',
+                     action = 'store_false',
+                     help = 'skip IO benchmakr')
+
   opts, opts_unknown = parser.parse_known_args()
+
   ### ----
 
   if len(opts_unknown) > 0:
@@ -205,6 +225,7 @@ if __name__ == "__main__":
     'logdir'              : opts.logdir if opts.logdir else None,
     'tmpdir'              : opts.tmpdir,
     'keep'                : opts.keep,
+    'data'                : opts.data,
   }
 
   # measure the throughput for reading the input data
